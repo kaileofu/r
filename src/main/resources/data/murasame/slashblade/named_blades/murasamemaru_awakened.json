@@ -1,0 +1,37 @@
+{
+  "item": "murasame:murasamemaru",
+  "name": "murasame:murasamemaru_awakened",
+  "properties": {
+    "attack_base": 22.0,
+    "max_damage": 220,
+    "slash_art": "slashblade:wave_edge",
+    "sword_type": [
+      "bewitched",
+      "fiery_edge"
+    ],
+    "special_effects": [
+      "murasame:murasame_blessing",
+      "murasame:blade_soul"
+    ]
+  },
+  "render": {
+    "carry_type": "default",
+    "model": "murasame:models/murasame/murasamemaru_awakened.obj",
+    "texture": "murasame:models/murasame/murasamemaru_awakened.png",
+    "summon_sword_color": 65350
+  },
+  "enchantments": [
+    {
+      "id": "minecraft:sharpness",
+      "lvl": 5
+    },
+    {
+      "id": "minecraft:fire_aspect",
+      "lvl": 2
+    },
+    {
+      "id": "minecraft:unbreaking",
+      "lvl": 3
+    }
+  ]
+}
