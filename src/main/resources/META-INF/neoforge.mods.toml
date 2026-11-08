@@ -1,6 +1,3 @@
-# NeoForge 1.21.1 模组描述文件
-# 变量（${...}）由 build.gradle 的 processResources 从 gradle.properties 注入。
-
 modLoader = "javafml"
 loaderVersion = "${loader_version_range}"
 license = "${mod_license}"
@@ -12,10 +9,6 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = '''${mod_description}'''
-
-# ==================== 依赖 ====================
-# NeoForge 1.21.x 的依赖字段是 type（旧版 Forge 是 mandatory），
-# type 取值：required / optional / incompatible / discouraged / unsupported
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"
@@ -31,19 +24,9 @@ versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
-# ---- 前置：SlashBlade: Resharped ----
-# 1.21.1 版本的 modid 仍然是 slashblade（包名 mods.flammpfeil.slashblade）
 [[dependencies.${mod_id}]]
 modId = "slashblade"
 type = "required"
 versionRange = "[${slashblade_version},)"
 ordering = "AFTER"
 side = "BOTH"
-
-# ---- 可选：JEI（配方展示用，没装也能跑）----
-#[[dependencies.${mod_id}]]
-#modId = "jei"
-#type = "optional"
-#versionRange = "[19,)"
-#ordering = "AFTER"
-#side = "BOTH"
