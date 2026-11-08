@@ -1,0 +1,10 @@
+{
+  "itemGroup.murasame.tab": "Murasame",
+  "item.murasame.murasamemaru": "§dNamed Blade§2 \"Murasamemaru\"",
+  "item.murasame.murasamemaru_awakened": "§6Divine Blade§a \"Murasamemaru\"",
+  "se.murasame.murasame_blessing": "§aMurasame's Blessing",
+  "se.murasame.blade_soul": "§bBlade Soul",
+  "slash_art.murasame.spatial_slash": "§a§k11§dSpatial Slash§a§k11",
+  "message.murasame.need_level": "Murasamemaru refuses you. You need more experience.",
+  "message.murasame.evolved": "§6§k111§aMurasamemaru has awakened its blade soul§6§k111"
+}
