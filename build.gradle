@@ -1,0 +1,148 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    // NeoForge 1.21.1 官方推荐 ModDevGradle（不是 ForgeGradle，也不是 NeoGradle）
+    id 'net.neoforged.moddev' version '2.0.78'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+// MC 1.21.1 需要 Java 21
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    // 可选：Parchment 参数名（需要时取消注释，会联网拉取）
+    // parchment {
+    //     minecraftVersion = project.minecraft_version
+    //     mappingsVersion = project.parchment_mappings_version
+    // }
+
+    // 运行时校验 access transformer（本工程暂未使用，留空即可）
+    // accessTransformers.from 'src/main/resources/META-INF/accesstransformer.cfg'
+
+    runs {
+        client {
+            client()
+            // 开发环境里偶尔需要关掉数据生成缓存
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        // 数据生成：./gradlew runData
+        data {
+            clientData()
+            programArguments.addAll '--mod', project.mod_id,
+                    '--all',
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+repositories {
+    // Modrinth 官方 Maven（SlashBlade: Resharped 走这里）
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
+    // CurseForge 备选源
+    maven {
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+        content { includeGroup 'curse.maven' }
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    // ================= SlashBlade: Resharped（必需前置）=================
+    // 2.1.9-1.21.1（Modrinth version id: SA6IKdsb）
+    // TODO(版本)：升级前置时把下面的 version id 换成 Modrinth 上新版本对应的 id。
+    //              查询：https://api.modrinth.com/v2/project/slashblade-resharped/version
+    implementation "maven.modrinth:8T53F0sy:SA6IKdsb"
+
+    // 备选写法（CurseForge）：把上面一行注释掉，用下面这行。
+    // 1022428 = SlashBlade: Resharped 的 project id；8083106 = 2.0.3-1.21.1 的 file id
+    // implementation "curse.maven:slashblade-resharped-1022428:8083106"
+
+    // 可选：JEI（要做配方展示再打开）
+    // compileOnly "mezz.jei:jei-1.21.1-neoforge-api:19.21.0.247"
+    // runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
+}
+
+// 把 gradle.properties 里的值注入 neoforge.mods.toml
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description,
+            slashblade_version     : slashblade_version
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors
+        ])
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

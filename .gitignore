@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+out/
+classes/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+bin/
+
+# Eclipse / run
+run/
+runs/
+run-data/
+src/generated/resources/.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 本地密钥/令牌
+*.pem
+secrets.properties
